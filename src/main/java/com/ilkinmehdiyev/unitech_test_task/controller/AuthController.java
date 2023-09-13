@@ -1,7 +1,10 @@
 package com.ilkinmehdiyev.unitech_test_task.controller;
 
+import com.ilkinmehdiyev.unitech_test_task.model.dto.UserLoginRequest;
+import com.ilkinmehdiyev.unitech_test_task.model.dto.UserLoginResponse;
 import com.ilkinmehdiyev.unitech_test_task.model.dto.UserRegisterRequest;
 import com.ilkinmehdiyev.unitech_test_task.model.dto.UserRegisterResponse;
+import com.ilkinmehdiyev.unitech_test_task.service.AuthService;
 import com.ilkinmehdiyev.unitech_test_task.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +22,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
+    private final AuthService authService;
     private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<UserRegisterResponse> register(@RequestBody @Valid UserRegisterRequest request) {
+        log.info("Received request to register.");
         UserRegisterResponse registeredUser = userService.register(request);
 
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserLoginResponse> login(@RequestBody @Valid UserLoginRequest request) {
+        log.info("Received request to login");
+
+        UserLoginResponse loginResponse = authService.login(request);
+
+        return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 }

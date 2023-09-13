@@ -1,5 +1,6 @@
 package com.ilkinmehdiyev.unitech_test_task.security;
 
+import com.ilkinmehdiyev.unitech_test_task.model.constants.SecurityConstants;
 import com.ilkinmehdiyev.unitech_test_task.service.impl.UserDetailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,7 @@ public class SecurityConfig {
         return httpSecurity.cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requestMatcherRegistry ->
-                        requestMatcherRegistry.requestMatchers("api/v1/auth/register/**").permitAll())
+                        requestMatcherRegistry.requestMatchers(SecurityConstants.PERMITTED_URLS).permitAll())
                 .authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry.requestMatchers("api/v1/users/**")
                         .hasAnyAuthority("USER", "ADMIN"))
                 .userDetailsService(userDetailService)
@@ -35,15 +36,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    /*        return http.cors()
-                .and().csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/register/**")
-                .permitAll()
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers("/users/**")
-                .hasAnyAuthority("USER", "ADMIN")
-                .and().formLogin().and().build();*/
 }
